@@ -18,12 +18,12 @@ public class CustomerRepository {
     }
 
     // hql query
-    // public List<CustomerEntity> getALLCustomer() {
-    // String hql = "FROM CustomerEntity";
-    // Query query = session.createQuery(hql);
-    // List<CustomerEntity> customerEntities = query.list();
-    // return customerEntities;
-    // }
+    public List<CustomerEntity> getALLCustomer() {
+        String hql = "FROM CustomerEntity";
+        Query query = session.createQuery(hql);
+        List<CustomerEntity> customerEntities = query.list();
+        return customerEntities;
+    }
 
     // native query query
     public List<Object[]> getALLCustomerByNative() {
@@ -31,6 +31,30 @@ public class CustomerRepository {
         Query query = session.createSQLQuery(sql);
         List<Object[]> data = query.list();
         return data;
+    }
+
+    // get specific coloumn using hql
+    public List<Object[]> getALLCustomerNameAndDOB() {
+        String hql = "SELECT C.id, C.name, C.dob FROM CustomerEntity C";
+        Query query = session.createQuery(hql);
+        List<Object[]> data = query.list();
+        return data;
+    }
+
+    // using where clause in hql
+    public CustomerEntity getCustomerByHQL(String custId) {
+        String hql = "FROM CustomerEntity WHERE id= '" + custId + "'";
+        Query query = session.createQuery(hql);
+        CustomerEntity customerEntity = (CustomerEntity) query.uniqueResult(); // to get one result from database
+        return customerEntity;
+    }
+
+    public CustomerEntity getCustomerByHQLUsingNamedParameterd(String custId) {
+        String hql = "FROM CustomerEntity WHERE id=:id";
+        Query query = session.createQuery(hql);
+        query.setParameter("id", custId);
+        CustomerEntity customerEntity = (CustomerEntity) query.uniqueResult();
+        return customerEntity;
     }
 
 }
