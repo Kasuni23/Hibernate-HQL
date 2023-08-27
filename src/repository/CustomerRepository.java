@@ -17,11 +17,20 @@ public class CustomerRepository {
         return customerEntity;
     }
 
-    public List<CustomerEntity> getALLCustomer() {
-        String hql = "FROM CustomerEntity";
-        Query query = session.createQuery(hql);
-        List<CustomerEntity> customerEntities = query.list();
-        return customerEntities;
+    // hql query
+    // public List<CustomerEntity> getALLCustomer() {
+    // String hql = "FROM CustomerEntity";
+    // Query query = session.createQuery(hql);
+    // List<CustomerEntity> customerEntities = query.list();
+    // return customerEntities;
+    // }
+
+    // native query query
+    public List<Object[]> getALLCustomerByNative() {
+        String sql = "select * from customer;";
+        Query query = session.createSQLQuery(sql);
+        List<Object[]> data = query.list();
+        return data;
     }
 
 }
