@@ -1,9 +1,15 @@
-import org.hibernate.Session;
+import java.util.List;
 
-import Util.sessionFactoryConfiguration;
+import entity.CustomerEntity;
+import repository.CustomerRepository;
 
 public class App {
     public static void main(String[] args) throws Exception {
-        Session session = sessionFactoryConfiguration.getInstance().getSession();
+        CustomerRepository repository = new CustomerRepository();
+
+        List<CustomerEntity> customerEntities = repository.getALLCustomer();
+        customerEntities.forEach(e -> {
+            System.out.println(e);
+        });
     }
 }
