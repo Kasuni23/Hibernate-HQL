@@ -1,5 +1,6 @@
 package repository;
 
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -7,6 +8,7 @@ import org.hibernate.query.Query;
 
 import Util.sessionFactoryConfiguration;
 import entity.CustomerEntity;
+import entity.OrderEntity;
 
 public class CustomerRepository {
     Session session = sessionFactoryConfiguration.getInstance().getSession();
@@ -55,6 +57,45 @@ public class CustomerRepository {
         query.setParameter("id", custId);
         CustomerEntity customerEntity = (CustomerEntity) query.uniqueResult();
         return customerEntity;
+    }
+
+    // order by
+
+    public List<CustomerEntity> getAllCustomersOrderByNameDesc() {
+        String hql = "FROM CustomerEntity ORDER BY name DESC";
+        Query query = session.createQuery(hql);
+        List<CustomerEntity> customerEntities = query.list();
+        return customerEntities;
+    }
+
+    // SELECT Count(CustID), SUM(salary), AVG(salary), MAX(salary), MIN(salary) FROM
+    // Customer;
+
+    public Object[] getCustomerSummery() {
+        String hql = "SELECT count(id), sum(salary), avg(salary), max(salary), min(salary) FROM CustomerEntity";
+        Query query = session.createQuery(hql);
+        Object[] data = (Object[]) query.uniqueResult();
+        return data;
+    }
+
+    // SELECT province, Count(CustID), SUM(salary), AVG(salary), MAX(salary),
+    // MIN(salary) FROM Customer GROUP BY province;
+
+    public List<Object[]> getCustomerSummeryByProvince() {
+        String hql = "SELECT province ,count(id), sum(salary), avg(salary), max(salary), min(salary) FROM CustomerEntity GROUP BY province";
+        Query query = session.createQuery(hql);
+        List<Object[]> data = query.list();
+        return data;
+    }
+
+    public List<OrderEntity> getOrdersBeforeAndProvince(Date date, String province) {
+        String hql = "SELECT ord FROM CustomerEntity AS cust INNER JOIN cust.orderEntities AS ord WHERE cust.province =:province AND ord.date<:date";
+        Query query = session.createQuery(hql);
+        query.setParameter("province", province);
+        query.setParameter("date", date);
+
+        List<OrderEntity> orderEntities = query.list();
+        return orderEntities;
     }
 
 }
